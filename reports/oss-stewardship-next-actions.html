@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Source Stewardship in the AI Era: Explicit Next Actions</title>
+  <meta name="description" content="A research report on sustainable open-source review: how to route issues and pull requests, protect maintainer capacity, and grow product use and durable contributors in the AI era.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --paper: #f4efe3;
+      --ink: #211c16;
+      --soft-ink: #6f675d;
+      --rule: #cfc4b2;
+      --faint-rule: #e2d8c8;
+      --mark: #9b2c22;
+      --mark-2: #1f6f64;
+      --note: #eee5d6;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+      --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper: #171512;
+        --ink: #f0e7d8;
+        --soft-ink: #bdb1a1;
+        --rule: #463d32;
+        --faint-rule: #302a23;
+        --mark: #ef8b7f;
+        --mark-2: #8ed7c9;
+        --note: #211d18;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.62; text-rendering: optimizeLegibility; }
+    a { color: var(--mark); text-decoration-thickness: .07em; text-underline-offset: .18em; }
+    header { max-width: 1120px; margin: 0 auto; padding: 54px 24px 32px; }
+    .wrap { max-width: 1120px; margin: 0 auto; }
+    .kicker { width: max-content; max-width: 100%; padding-top: 10px; border-top: 3px solid var(--ink); font: 700 12px/1.35 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mark); }
+    h1 { max-width: 960px; margin: 22px 0; font-size: clamp(2.65rem, 8vw, 5.8rem); line-height: .94; letter-spacing: -.065em; font-weight: 500; overflow-wrap: anywhere; }
+    .title-line { display: inline; }
+    .subtitle { max-width: 820px; font-size: clamp(1.15rem, 2vw, 1.42rem); color: var(--soft-ink); }
+    .meta { display: block; margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--rule); color: var(--soft-ink); font: 13px/1.7 var(--mono); }
+    .pill { display: inline; padding: 0; border: 0; background: transparent; }
+    .pill + .pill::before { content: " · "; color: var(--rule); }
+    main { max-width: 1120px; margin: 0 auto; padding: 18px 24px 72px; display: grid; grid-template-columns: 230px minmax(0, 760px); gap: 70px; justify-content: start; border-top: 1px solid var(--rule); }
+    nav { position: sticky; top: 18px; align-self: start; max-height: calc(100vh - 36px); overflow: auto; padding: 16px 0 0; border-top: 3px double var(--rule); }
+    nav h2 { margin: 0 0 12px; font: 700 12px/1.35 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--soft-ink); }
+    nav a { display: block; padding: 5px 0; color: var(--soft-ink); text-decoration: none; font: 14px/1.35 var(--sans); }
+    nav a:hover { color: var(--mark); }
+    article { min-width: 0; }
+    section { margin: 0 0 58px; }
+    section + section { padding-top: 18px; border-top: 1px solid var(--faint-rule); }
+    h2 { margin: 0 0 18px; font-size: clamp(1.75rem, 3vw, 2.65rem); line-height: 1.08; letter-spacing: -.04em; font-weight: 500; }
+    h3 { margin: 34px 0 10px; font-size: 1.33rem; line-height: 1.25; letter-spacing: -.018em; font-weight: 600; }
+    h4 { margin: 22px 0 6px; font: 700 .82rem/1.25 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--mark-2); }
+    p, li { font-size: 1.055rem; }
+    p { margin: 0 0 16px; }
+    ul, ol { padding-left: 1.25rem; }
+    li { margin: 0 0 7px; }
+    .lead { font-size: 1.25rem; line-height: 1.48; }
+    .callout { margin: 26px 0; padding: 18px 22px; border-left: 3px solid var(--mark); background: var(--note); }
+    .callout strong { color: var(--mark); }
+    .question { border-left-color: var(--mark-2); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 34px; margin: 20px 0; }
+    .card { padding: 14px 0 0; border-top: 1px solid var(--rule); }
+    .card h3 { margin-top: 0; }
+    .state h3 { font-size: 1.15rem; }
+    .state p { margin-bottom: 9px; }
+    table { width: 100%; border-collapse: collapse; margin: 22px 0; font: 14px/1.45 var(--sans); }
+    th, td { padding: 8px 10px; border-bottom: 1px solid var(--faint-rule); text-align: left; vertical-align: top; }
+    th { background: var(--paper); font: 700 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--soft-ink); }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-left: 0; border-right: 0; }
+    .table-wrap table { margin: 0; min-width: 680px; }
+    blockquote { margin: 28px 0; padding: 0 0 0 22px; border-left: 3px solid var(--mark-2); color: var(--ink); font-size: 1.18rem; }
+    code { font-family: var(--mono); font-size: .88em; padding: .08em .25em; background: var(--note); }
+    .note { color: var(--soft-ink); font-size: .96rem; }
+    .template { margin: 16px 0; padding: 15px 18px; border: 1px solid var(--rule); font-size: 1.02rem; }
+    .template p:last-child { margin-bottom: 0; }
+    .refs { columns: 2; column-gap: 34px; }
+    .refs li { break-inside: avoid; font-size: .95rem; }
+    footer { border-top: 1px solid var(--rule); padding: 24px; color: var(--soft-ink); font: 13px/1.5 var(--mono); }
+    @media (max-width: 900px) { main { grid-template-columns: 1fr; gap: 28px; } nav { position: static; } .grid { grid-template-columns: 1fr; } .refs { columns: 1; } }
+    @media (max-width: 560px) {
+      header { padding: 32px 18px 24px; }
+      main { padding: 16px 18px 52px; }
+      h1 { font-size: 2.15rem; line-height: .98; letter-spacing: -.055em; }
+      .title-line { display: block; }
+      .kicker, .meta { overflow-wrap: anywhere; }
+    }
+    @media print { nav { display: none; } main { display: block; max-width: 100%; } a { color: inherit; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <header>
+      <div class="wrap">
+        <div class="kicker">Research report 002 · Open-source maintainership</div>
+        <h1><span class="title-line">Open Source Stewardship</span> <span class="title-line">in the AI Era:</span><br><span class="title-line">Explicit Next Actions</span></h1>
+        <p class="subtitle">A practical research synthesis on routing issues and pull requests, protecting scarce review capacity, and growing product use and durable contributors without treating every open item as a promise of maintainer labour.</p>
+        <div class="meta">
+          <span class="pill">Published: July 2026</span>
+          <span class="pill">Public-data snapshot: July 2, 2026</span>
+          <span class="pill">Scope: established OSS projects and WordPress Playground</span>
+          <span class="pill">Focus: review queues, evidence, capacity, AI-era contribution flow</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <nav aria-label="Table of contents">
+        <h2>Contents</h2>
+        <a href="#thesis">Thesis</a>
+        <a href="#evidence">What the evidence can show</a>
+        <a href="#projects">Project patterns</a>
+        <a href="#ai-policy-patterns">AI policy enforcement</a>
+        <a href="#model">Six stewardship states</a>
+        <a href="#medium">Medium and accepted changes</a>
+        <a href="#interfaces">Use the right interface</a>
+        <a href="#next-actions">Evidence-backed next actions</a>
+        <a href="#language">Language and closure</a>
+        <a href="#playground">WordPress Playground</a>
+        <a href="#measurement">What to measure</a>
+        <a href="#questions">Open questions</a>
+        <a href="#sources">Sources</a>
+      </nav>
+
+      <article>
+        <section id="thesis">
+          <h2>Thesis</h2>
+          <p class="lead">The productive unit of open source is not an issue, a PR, or a merge. It is a verified, project-aligned outcome—and, sometimes, a person who has learned enough to make the next outcome cheaper.</p>
+          <div class="callout">
+            <p><strong>Stewardship is allocation under uncertainty.</strong> A maintainer is deciding whether the next scarce hour should go to understanding a report, agreeing on a direction, reviewing a patch, reproducing a failure, merging and supporting a change, or declining the work.</p>
+            <p><strong>The key output is an explicit next action.</strong> “Fast merge,” “needs proof,” and “proposal first” are useful classifications. They become useful stewardship only when they answer: what should a human do now, what evidence supports it, and when is no action the responsible choice?</p>
+          </div>
+          <p>AI changes this allocation problem because it lowers the cost of producing plausible text, code, and replies. It does not lower the cost of knowing whether a change belongs, works, is safe to release, or has an accountable author. The bottleneck therefore shifts toward verification, context, and judgment.</p>
+          <blockquote>Do not treat openness as an obligation to review every contribution deeply. Treat openness as a legible route for people who can help the project move forward.</blockquote>
+        </section>
+
+        <section id="evidence">
+          <h2>What the evidence can show—and what it cannot</h2>
+          <p>Public repositories reveal policies, queue shape, review discussion, merge and closure counts, and sometimes the words maintainers use. They do not reveal the private cost of deliberation, the quality of offline discussion, or the long-term trajectory of individual contributors. A merge rate is a throughput measure, not a community-health measure.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Question</th><th>Public evidence can support</th><th>Public evidence cannot settle</th></tr></thead>
+              <tbody>
+                <tr><td>Does a project process constrained work efficiently?</td><td>PR volume, merge rate, latency, automation and ownership rules.</td><td>Whether contributors became competent reviewers or maintainers.</td></tr>
+                <tr><td>Did a policy change cause growth or decline?</td><td>A before/after association and contemporaneous maintainer rationale.</td><td>Direct causality without a credible comparison and retention data.</td></tr>
+                <tr><td>Is a backlog healthy?</td><td>Age, response pattern, duplication, missing ownership, and closure discipline.</td><td>Whether every old item still represents a user need.</td></tr>
+                <tr><td>Is AI the problem in a submission?</td><td>Missing evidence, generic claims, unexplained changes, absent follow-up, and policy violations.</td><td>Reliable provenance from style alone.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>That limitation matters for prominent policy changes. curl’s termination of its bug bounty followed a documented deterioration in report quality; Godot, Rust, Django, LLVM, Kubernetes, CPython, Linux, and Gentoo have all made AI-era policy choices. Those are strong observations about <em>maintainer response to pressure</em>. They are not clean experiments proving that a particular policy increased or decreased project popularity.</p>
+          <p>Node.js and GCC make the same methodological point from different traditions. Node gives triagers authority to label, comment, close, and reopen, and offers a path from valuable contribution to collaborator status. GCC requires a description, tests, tested configurations, small coherent patches, and routes review through maintainers and mailing lists. Both encode responsibility before merge. Neither provides a public counterfactual proving that a single review-policy change caused later community growth.</p>
+          <div class="callout question"><strong>Clear answer:</strong> claims that a prominent project “lost traction because it became stricter” or “grew because it allowed more PRs” usually overstate the evidence. Policy often changes <em>because</em> the project has already reached a capacity limit; this reverse causality is the central trap.</div>
+        </section>
+
+        <section id="projects">
+          <h2>What established projects optimize for</h2>
+          <h3>High-throughput ecosystems: Homebrew and Nixpkgs</h3>
+          <p>Homebrew/core and Nixpkgs handle unusually large PR volumes because a substantial share of their work is constrained: package updates, metadata, formula changes, and platform-specific fixes with repeatable checks. The lesson is not “be maximally permissive.” It is “make common work modular and machine-checkable, then reserve human judgment for the remainder.”</p>
+          <p class="note">Growth pattern: a large contributor surface can be healthy when work is small, owned, and automatable. Blocker: high merge volume can still coexist with absent owners and a long review queue.</p>
+
+          <h3>Formal ownership: Kubernetes, Node.js, and GCC</h3>
+          <p>Kubernetes routes work through OWNERS files, reviewer and approver roles, commands, labels, and CI gates. Node grants triagers an explicit operational role and makes sustained valuable contributors eligible for collaborator status; two collaborators normally approve a landing. GCC requires tests, testing evidence, coherent patches, and component-aware review; it distinguishes approved direction from technical approval of individual patches.</p>
+          <p>The common mechanism is not bureaucracy for its own sake. It is a visible answer to three questions: <em>who may decide, what must be true before they decide, and how can a contributor earn more responsibility?</em></p>
+
+          <h3>Product and API stewards: Django, React, Godot, and Rust</h3>
+          <p>These projects must decide what should exist, not merely whether a proposed implementation compiles. They send larger features through tickets, RFCs, proposals, team processes, or prior discussion. Godot describes review capacity as a primary bottleneck; React’s RFC history shows that discussion can be valuable even when an RFC does not merge; Django separates small patches from design-bearing work. Rust’s policy discussions show a stronger conclusion in the AI era: reviewers may reject contributions that impose an unreasonable burden.</p>
+          <p class="note">Growth pattern: strict filters and high popularity can coexist. A project can be welcoming while declining to make its API, architecture, or reviewers an unbounded public resource.</p>
+
+          <h3>Rust: low-effort contributions are not entitled to review</h3>
+          <p>Rust’s finalized project-wide contribution policy applies to pull requests, issues, proposals, and comments. It requires effort proportionate to review cost, accountability for what a person submits, and compassion in the review interaction. It calls fully AI-generated, insufficiently self-reviewed content—and feeding reviewer questions to an AI then proxying its reply back—examples of <em>low-effort contributions</em>. Maintainers and moderators are explicitly not required to spend effort explaining their rejection.</p>
+          <p>This is stricter than a request for AI disclosure, but it is not accurate to say that Rust bans contributors for using AI. The final policy does not establish an automatic contributor ban. The opening draft proposed a moderation warning for a first instance and a ban for repeated offenses or obviously automated accounts; the issue says that wording was superseded by the finalized policy. The durable boundary is about observable effort, understanding, and accountability—not a claim that a maintainer can reliably detect a tool from the prose or diff.</p>
+          <div class="callout question"><strong>Practical reading:</strong> “vibe-coded PRs are not welcome” is useful informal shorthand only if it means <em>unreviewed, unexplainable work that shifts verification onto maintainers</em>. A policy should be written in that observable language, so it can distinguish an accountable AI-assisted contributor from an automated or extractive submission.</div>
+
+        <section id="ai-policy-patterns">
+          <h2>AI policy enforcement is not one thing</h2>
+          <p>“Vibe-coded PRs are not welcome” is too imprecise to describe a project policy. Projects make separate choices about content provenance, human accountability, autonomous interaction, review workflow, and account-level sanctions. Conflating them makes a policy harder to apply fairly.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Project</th><th>Tool-use boundary</th><th>Enforcement stated publicly</th></tr></thead>
+              <tbody>
+                <tr><td>QEMU</td><td>Declines contributions known or suspected to include or derive from AI-generated content, including Copilot, ChatGPT, Claude, and Code Llama output. Research, static analysis, and debugging are outside that submission ban.</td><td>Decline the contribution. This is primarily a DCO and copyright-provenance policy; it does not state an account ban for using a tool.</td></tr>
+                <tr><td>Godot</td><td>Entirely AI-made contributions are prohibited. AI assistance is discouraged; any use must be disclosed, understood, tested, and limited. Its announced policy says no autonomous-agent use or “vibe coding.”</td><td>Autonomous-agent use or vibe coding is stated to result in an automatic GitHub ban. Separately, new contributors need explicit maintainer permission for new features or significant refactors.</td></tr>
+                <tr><td>Django</td><td>Allows AI assistance with disclosure, manual verification, tests, documentation, and a completed PR template. Automated AI reviews on Django PRs are prohibited.</td><td>Unverified generated submissions may close without review; repeated low-quality contributions may lead to restricted participation.</td></tr>
+                <tr><td>CPython</td><td>Allows AI as a tool but holds the contributor responsible for a useful, focused, tested result.</td><td>Maintainers may close unproductive work, including fully generated issues and PRs. Repeated unproductive submissions may lead to the account being blocked.</td></tr>
+                <tr><td>LLVM</td><td>Allows tools with a human in the loop, author accountability, self-review, and disclosure. Autonomous agents and automatic review comments are prohibited; AI may not solve <code>good first issue</code>s.</td><td>Request changes, label an item <code>extractive</code>, and escalate a stalled conversation for a lock. The policy does not prescribe banning the author of an ordinary bad PR.</td></tr>
+                <tr><td>Kubernetes</td><td>Allows disclosed AI assistance only when the human author understands, verifies, and personally answers for the work.</td><td>A PR closes if its author cannot explain the changes or relies on AI to answer review comments. The published guidance does not prescribe an account sanction for that alone.</td></tr>
+                <tr><td>Linux kernel</td><td>Allows AI assistance subject to human review, responsibility, attribution, licensing, and a human DCO sign-off.</td><td>AI agents may not add <code>Signed-off-by</code>. This is a provenance and accountability control, not a blanket content or account ban.</td></tr>
+                <tr><td>curl</td><td>Allows AI-assisted code if it meets ordinary quality, testing, clarity, and licensing standards. For AI-found reports, disclosure and independent verification are required.</td><td>AI-assisted PRs are judged as contributions. curl says it immediately bans users who submit made-up security reports; that is a sanction for false reports, not merely tool use.</td></tr>
+                <tr><td>Node.js</td><td>Its published rule concerns automation rather than AI-authored code: bots not managed by the project need explicit authorization before interacting with issues, comments, PRs, or reviews.</td><td>Unauthorized automation and its owner are subject to immediate moderation enforcement. This is an autonomous-interaction rule.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><strong>Three practical policy families emerge.</strong> QEMU is a content-provenance prohibition. Godot is a human-authorship policy with an explicit ban for autonomous/vibe-coded activity. LLVM, Kubernetes, Django, CPython, Linux, and curl are accountability policies: they differ in disclosure, evidence, closure, locking, restriction, and blocking rules, but they test whether a human has carried their share of the work.</p>
+          <p>For projects that want to grow contributors, the accountability family is usually the most operationally useful default. It permits useful assistance while rejecting the behaviour that consumes review capacity: unexplained diffs, missing verification, fabricated reports, automatic comments, proxy replies, and repeated submission without learning. Account restrictions should be reserved for repeated low-quality behavior, fabrication, or autonomous abuse—not inferred from code style.</p>
+        </section>
+
+          <h3>Security pipelines: curl</h3>
+          <p>curl shows why a contribution channel is not automatically beneficial merely because it is open. Its bounty program produced real vulnerabilities for years, then low-quality and AI-assisted reports made verification cost too high relative to confirmed findings. Security work amplifies the problem because a false positive can require prolonged, expert investigation. The lesson applies to ordinary issues at smaller scale: require a human explanation, a reproducer, relevant versions, and a responsive reporter before spending specialist review time.</p>
+
+          <h3>Tool-use policies: LLVM, Linux, and Gentoo</h3>
+          <p>LLVM permits tool use but requires authors to review it, disclose substantial use, and answer for it; it calls unreviewed output an “extractive contribution.” Linux retains maintainer discretion and legal provenance rules. Gentoo prohibits NLP-AI-created contributions. These policies differ, but the operational concern is shared: a submission is not a gift if it moves explanation, verification, and accountability onto the recipient.</p>
+        </section>
+
+        <section id="model">
+          <h2>A six-state stewardship model</h2>
+          <p>The earlier four queues—fast merge, needs proof, needs design acceptance, close quickly—capture genuine paths. They omit two states that prevent a great deal of unnecessary maintainer work: <strong>bounded review</strong> and <strong>wait / none needed</strong>.</p>
+          <p>A <strong>state</strong> describes the work’s current condition. An <strong>action</strong> is the smallest useful move by a maintainer. A <strong>queue</strong> is a promise of attention. Do not turn every state into a queue: “waiting on the contributor” and “another reviewer is actively handling the linked PR” should not consume the normal review queue.</p>
+          <div class="grid">
+            <div class="card state"><h3>1. Fast merge</h3><p>Small, tested, owned by a clear area, low product/design risk, and ready for a short review.</p><p class="note"><strong>Action:</strong> review, request the minimum necessary change, merge when checks and verification are complete.</p></div>
+            <div class="card state"><h3>2. Bounded review</h3><p>In scope and sufficiently evidenced, but not trivial: a focused bug fix, feature slice, or medium change needing a stated review budget.</p><p class="note"><strong>Action:</strong> name the scope, review target, owner or reviewer, and exit criteria; do not silently convert it into an open-ended obligation.</p></div>
+            <div class="card state"><h3>3. Needs proof</h3><p>Plausible report or patch, but missing a reproducer, regression test, benchmark, compatibility evidence, or actual-versus-expected behaviour.</p><p class="note"><strong>Action:</strong> ask for the precise missing proof before implementation review.</p></div>
+            <div class="card state"><h3>4. Needs direction</h3><p>Public API, product behavior, architecture, broad feature, or cross-subsystem choice without prior agreement.</p><p class="note"><strong>Action:</strong> move the decision to a proposal, RFC, discussion, or project forum; code review starts only after a decision.</p></div>
+            <div class="card state"><h3>5. Wait / none needed</h3><p>The next useful actor is already clear: the reporter is gathering requested evidence, the author is responding to review, CI is running, another reviewer has taken the PR, or a linked PR is active.</p><p class="note"><strong>Action:</strong> do not post process noise. Make the reason and wake-up condition visible to maintainers.</p></div>
+            <div class="card state"><h3>6. Close deliberately</h3><p>Duplicate, solved elsewhere, out of scope, inactive after a fair interval, not reviewable, or policy-violating.</p><p class="note"><strong>Action:</strong> close promptly with the narrowest truthful reason, a link where relevant, and a path back only when one genuinely exists.</p></div>
+          </div>
+          <div class="callout"><strong>Important distinction:</strong> “no capacity” is neither “needs proof” nor “not useful.” A change may be aligned and still receive an explicit capacity outcome: <em>useful, but not scheduled for review now.</em> This is more honest than sending a contributor into an indefinite queue.</div>
+        </section>
+
+        <section id="medium">
+          <h2>Medium changes and accepted proposals</h2>
+          <p>Medium changes are where simplistic triage breaks down. They are too consequential for fast merge, but too bounded to require an open-ended design process. A large change with an accepted proposal is also not automatically ready for review.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Statement</th><th>What it means</th><th>What it does not mean</th></tr></thead>
+              <tbody>
+                <tr><td>“The direction is accepted.”</td><td>The problem and intended shape are worth pursuing.</td><td>Every implementation detail is accepted, or review capacity is reserved.</td></tr>
+                <tr><td>“This has an owner.”</td><td>Someone is accountable for moving it forward.</td><td>That person is available to review a large patch now.</td></tr>
+                <tr><td>“The PR is in scope.”</td><td>It addresses a wanted outcome.</td><td>The current diff is the right review unit.</td></tr>
+                <tr><td>“The author responded.”</td><td>Re-review may be justified.</td><td>A reviewer must re-read every unchanged part.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>A healthy medium-change rule has four parts: a short accepted intent; the smallest independently useful slice; a named reviewer or a stated capacity boundary; and verification/exit criteria. If any part is missing, the next action is to supply that part, not to begin line-by-line review.</p>
+          <p>GCC’s acceptance of a WebAssembly backend illustrates the distinction well: the Steering Committee welcomed the direction, explicitly did not approve the implementation or patches, required technical review, and asked for an experienced co-maintainer. This is not obstruction. It makes the continuing maintenance obligation visible before code lands.</p>
+          <div class="template"><strong>Capacity boundary</strong><p>“The direction is useful and the proposal gives us a good starting point. We do not currently have a reviewer who can take on this implementation as a single review. Please keep the design note, identify the smallest independently useful slice, and open that as a focused PR. We can reassess review capacity from there.”</p></div>
+        </section>
+
+        <section id="interfaces">
+          <h2>Use the right interface for the work</h2>
+          <p>A PR is an interface for a reviewable implementation change. It is the wrong interface when the primary unknown is not the code.</p>
+          <div class="grid">
+            <div class="card"><h3>Issue</h3><p>A concrete failure, a bounded user need, a minimal reproduction, expected versus actual behavior, or a tracking item.</p><p class="note">Not a promise that someone will implement it.</p></div>
+            <div class="card"><h3>Discussion / proposal / RFC</h3><p>A product choice, public API, architecture, trade-off, or experiment whose desired shape is undecided.</p><p class="note">The outcome may be “not now,” a narrower problem, or a different owner.</p></div>
+            <div class="card"><h3>PR</h3><p>A coherent, self-reviewed implementation with evidence and a bounded review unit.</p><p class="note">A PR is evidence for a solution; it is not a substitute for agreeing on the problem.</p></div>
+            <div class="card"><h3>Project board / planning document</h3><p>Sequencing, ownership, dependencies, release timing, and work that requires coordination rather than code review.</p><p class="note">Avoids pretending that a collection of open PRs is a roadmap.</p></div>
+          </div>
+          <p>“Out of the normal queue” should therefore mean a visible URL and a named destination, not a vague deferral: an RFC or discussion thread, an issue linked to the relevant candidate PR, a project item with an owner, a private security channel, or a closed duplicate. The route must be inspectable by the contributor and maintainers.</p>
+        </section>
+
+        <section id="next-actions">
+          <h2>Evidence-backed next actions</h2>
+          <p>Effective triage starts with the entire available discussion, not just the title, the initial description, or diff size. For an issue, the most important evidence may be buried in a reply: a reproduction, a workaround, a linked candidate PR, a competing implementation, or confirmation that the fix has already merged.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Observed state</th><th>Useful next action</th><th>Public mutation?</th></tr></thead>
+              <tbody>
+                <tr><td>Clear report; no reproducer</td><td>Ask for the smallest reproduction or exact environment evidence.</td><td>One focused comment and a waiting status.</td></tr>
+                <tr><td>Issue already has an open candidate PR with no review</td><td>Review the linked PR.</td><td>Usually no issue comment; link the reviewer to the PR.</td></tr>
+                <tr><td>Candidate PR has active reviewer/author discussion</td><td>None needed; let that interaction progress.</td><td>No.</td></tr>
+                <tr><td>Author addressed requested changes</td><td>Re-review the PR, preferably by the previous reviewer or area owner.</td><td>Usually no issue comment.</td></tr>
+                <tr><td>Narrow and broad PRs solve the same report</td><td>Choose the smallest sufficient path; keep the broader work only if needed or split it.</td><td>Maybe add a status label and link to the selected PR.</td></tr>
+                <tr><td>Linked PR merged</td><td>Close the issue as solved and tell the reporter which PR addressed it.</td><td>Yes: one closing comment and close reason.</td></tr>
+                <tr><td>Duplicate report</td><td>Close as duplicate of the canonical issue.</td><td>Yes: link the canonical item.</td></tr>
+                <tr><td>Aligned work, no reviewer capacity</td><td>State the capacity boundary; do not fabricate a review queue.</td><td>One honest comment, then wait.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>There is a product implication for triage tooling. The first screen should show evidence, not a generic draft comment: reproduction found? linked PRs? smallest candidate? review state? merged? latest meaningful activity? Only then should it offer the minimal operation—review a PR, add or remove a label, close solved, wait, or ask a focused question.</p>
+          <p>For a local-first assistant, cache a recommendation by the last meaningful activity in the issue or PR. Recompute only when that activity changes or when a maintainer asks to reconsider. This avoids repeatedly spending model time and avoids showing stale confidence after someone replies.</p>
+          <div class="callout question"><strong>“None needed” is a real decision.</strong> It should grey an item in a list and show why: “reviewer discussion active,” “waiting for requested evidence,” “CI running,” or “handled by merged PR.” It is not the same as silence, and it is not an invitation to add another comment.</div>
+        </section>
+
+        <section id="language">
+          <h2>Language that moves work forward</h2>
+          <p>Good maintainer language is specific about the missing condition, does not invent process for a reporter who has already supplied useful evidence, and does not turn an internal observation into a public accusation. “AI slop” may describe an internal capacity problem; it is rarely the most useful public wording.</p>
+
+          <h3>Candidate PR already exists</h3>
+          <div class="template"><p>“Thanks for the clear report. The current reproduction and a candidate fix are already tracked in <a href="#">#1234</a>. The next useful step is to review and test that PR, so there is nothing further needed on this issue right now.”</p></div>
+
+          <h3>Accepted direction, but review capacity is not available</h3>
+          <div class="template"><p>“This is aligned with the direction we want to take. We do not have capacity to review this implementation in its current size. Please keep the proposal as the source of intent and, if you continue, start with the smallest independently useful slice plus verification steps. That gives us a realistic point to reassess.”</p></div>
+
+          <h3>Closing an unreviewable PR without line-by-line feedback</h3>
+          <div class="template"><p>“Thanks for opening this. I’m closing it without a line-by-line review because it does not yet provide a reviewable, verified starting point for the project. Please do not iterate on this PR from review notes. If there is still a concrete underlying problem, start with a minimal reproduction and desired behavior in an issue; after the direction is confirmed, a small independently tested PR can be evaluated.”</p></div>
+          <p>This wording names the decision and avoids pretending that maintainers owe a detailed review. It also avoids making an unverifiable provenance claim. A path back is appropriate only when a narrower, accountable contribution would genuinely be useful; “out of scope” and “duplicate” need not manufacture one.</p>
+
+          <h3>Closing a solved issue</h3>
+          <div class="template"><p>“This was addressed in <a href="#">#1234</a>. Thanks for the report and reproduction; closing as completed.”</p></div>
+
+          <h3>What not to say</h3>
+          <ul>
+            <li>Do not ask for a reproduction when one is already in the discussion.</li>
+            <li>Do not ask the reporter to find an owner when a candidate PR is already active.</li>
+            <li>Do not post “please re-review” into an issue when the work belongs on the PR.</li>
+            <li>Do not create an implementation discussion merely to demonstrate that a proposal has no capacity.</li>
+            <li>Do not tell a contributor to wait indefinitely when the accurate state is “no current capacity.”</li>
+          </ul>
+        </section>
+
+        <section id="playground">
+          <h2>Application: WordPress Playground</h2>
+          <p>For WordPress Playground, the primary objective is more useful product adoption: more WordPress users succeeding with Playground and more companies building on it. More reviewers and long-term maintainers are valuable secondary outcomes. This ordering changes how contribution work should be evaluated.</p>
+          <div class="grid">
+            <div class="card"><h3>Prioritize user-facing evidence</h3><p>Ask for a Playground URL, Blueprint, affected runtime/browser, expected and actual behavior, and a minimal reproduction where practical. A reproducible report can improve the product even if no PR follows.</p></div>
+            <div class="card"><h3>Route product direction before code</h3><p>New website behavior, APIs, runtime capability, or integration strategy should have a discussion or proposal URL before a large PR. This protects companies and contributors from investing in unwanted work.</p></div>
+            <div class="card"><h3>Make candidate PR routing explicit</h3><p>An issue with a linked PR should surface the PR title, size, review state, and whether it merged. The maintainer action is often “review PR,” “wait,” or “close as solved”—not a public issue comment.</p></div>
+            <div class="card"><h3>Invest in repeatable contributors</h3><p>Recognize reproducers, regression-test authors, documentation writers, triagers, and people who verify fixes. These roles reduce future maintainer load even when they do not produce merged feature code.</p></div>
+          </div>
+          <h3>Contribution types most likely to compound</h3>
+          <p>There is no public dataset proving a universal ranking. The strongest practical signals are behavior, not the first PR’s size: a contributor responds to review, narrows scope, writes or improves a reproducer, explains trade-offs in their own words, verifies another person’s change, and returns for related work. Small bug fixes, regression tests, reproducible reports, docs that remove setup friction, and triage work create more opportunities for those signals than a first large feature PR.</p>
+          <h3>What may be over-open</h3>
+          <ul>
+            <li>Feature requests treated as implementation invitations before a product decision exists.</li>
+            <li>Large draft PRs treated as a request for maintainer-led design and decomposition.</li>
+            <li>Stale issues and PRs that appear actionable but have no current owner, user evidence, or path to a decision.</li>
+            <li><code>good first issue</code> inventory that no longer has a verified reproduction, a willing mentor, or a bounded first step.</li>
+          </ul>
+          <h3>What should be recognized publicly</h3>
+          <p>Recognition should not be limited to merges: a precise reproduction, a Blueprint that isolates a runtime problem, a verified regression test, review confirmation, a user-support answer that becomes documentation, a design summary, a duplicate report linked to the canonical problem, or maintaining a package/integration. These are contributions to project throughput and user trust.</p>
+        </section>
+
+        <section id="measurement">
+          <h2>What to measure before declaring success</h2>
+          <p>Measure the service the project provides to users and contributors, not only the volume it processes. Start with a baseline, publish definitions, and review the results with maintainers. Do not infer success from a new label or a higher merge count alone.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Outcome</th><th>Useful measure</th><th>Failure mode to watch</th></tr></thead>
+              <tbody>
+                <tr><td>User and company adoption</td><td>Active users, successful task completion, returning users, named integrations, companies using Playground in a real workflow.</td><td>Counting GitHub activity instead of product value.</td></tr>
+                <tr><td>Triage quality</td><td>Time to first correct route; share of items with a visible next action; stale inventory retired; duplicate and solved links captured.</td><td>Fast but incorrect closures, or labels that nobody maintains.</td></tr>
+                <tr><td>Review capacity</td><td>Median time in active review; reviewer concentration; ratio of reviewed to abandoned PRs; time spent on rework.</td><td>Optimizing for fast closure while pushing useful work away.</td></tr>
+                <tr><td>Contributor development</td><td>Return rate after a first meaningful interaction; contributors who write tests, review, triage, or own an area later.</td><td>Equating a first merge with durable participation.</td></tr>
+                <tr><td>AI-era quality</td><td>Share of submissions with a reproducer, test evidence, self-review, and responsive follow-up; unreviewable PR closure reasons.</td><td>Trying to measure or police provenance instead of accountability.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>A small experiment is more credible than a broad policy claim: choose one subsystem, apply the six states for six weeks, record review time and outcomes, interview contributors who received each route, then adjust wording and thresholds. The relevant comparison is not “before versus after on all GitHub activity.” It is whether maintainers spend less time on dead-end work while users and promising contributors receive clearer, faster outcomes.</p>
+        </section>
+
+        <section id="questions">
+          <h2>Questions that remain uncomfortable</h2>
+          <h3>Does strict triage grow or shrink the contributor base?</h3>
+          <p>Both are plausible. Fast, legible routing may retain serious contributors by saving them wasted work; strictness can also deter people who need more early support. The decisive evidence would be cohorts from first meaningful interaction to a second contribution, review activity, and sustained ownership. Most projects do not publish it.</p>
+
+          <h3>When does mentoring become extraction?</h3>
+          <p>Mentoring has positive expected value when the contributor demonstrates learning and carries more of the next cycle. It becomes extraction when each reply causes maintainers to supply the analysis, test plan, implementation choices, and verification the author should own. Tool use makes this distinction more important, not less.</p>
+
+          <h3>Can a triage copilot create capacity?</h3>
+          <p>Not directly. It can surface evidence, prevent redundant comments, reduce queue confusion, remember wake-up conditions, and make correct small operations easy. It cannot replace a domain reviewer, settle product strategy, or turn a no-capacity project into one with capacity. Its safest role is decision support with human confirmation.</p>
+
+          <h3>Should every closure offer a path back?</h3>
+          <p>No. A duplicate should point to the canonical work; a solved issue should point to the fix; a narrowly missing proof should state the proof. A clearly out-of-scope request or an unreviewable PR may need only a truthful closure. Inventing a path back where the project does not intend to invest is misleading.</p>
+
+          <h3>What is good OSS stewardship?</h3>
+          <p>Make desired work discoverable. Make evidence part of the contribution. Route design before implementation. Review small, aligned changes promptly. State capacity limits plainly. Preserve the human learning loop. Close stale or low-return work without cruelty or theatre. Recognize invisible work. Measure whether the system helps users and turns some contributors into people who reduce—not increase—future maintainer load.</p>
+        </section>
+
+        <section id="sources">
+          <h2>Sources</h2>
+          <ol class="refs">
+            <li><a href="https://docs.brew.sh/Maintainer-Guidelines">Homebrew Maintainer Guidelines</a></li>
+            <li><a href="https://raw.githubusercontent.com/NixOS/nixpkgs/master/CONTRIBUTING.md">Nixpkgs CONTRIBUTING</a></li>
+            <li><a href="https://raw.githubusercontent.com/kubernetes/community/master/contributors/guide/pull-requests.md">Kubernetes Pull Request Process</a></li>
+            <li><a href="https://raw.githubusercontent.com/kubernetes/community/master/contributors/guide/owners.md">Kubernetes OWNERS files</a></li>
+            <li><a href="https://kubernetes.io/blog/2026/06/26/open-source-maintainership-in-the-age-of-ai/">Kubernetes: Open source maintainership in the age of AI</a></li>
+            <li><a href="https://raw.githubusercontent.com/nodejs/node/main/CONTRIBUTING.md">Node.js CONTRIBUTING</a></li>
+            <li><a href="https://raw.githubusercontent.com/nodejs/node/main/GOVERNANCE.md">Node.js governance</a></li>
+            <li><a href="https://raw.githubusercontent.com/nodejs/node/main/doc/contributing/pull-requests.md">Node.js pull-request guide</a></li>
+            <li><a href="https://gcc.gnu.org/contribute.html">Contributing to GCC</a></li>
+            <li><a href="https://gcc.gnu.org/gitwrite.html">GCC read-write access and review authority</a></li>
+            <li><a href="https://gcc.gnu.org/pipermail/gcc/2026-June/248353.html">GCC WebAssembly backend direction acceptance</a></li>
+            <li><a href="https://devguide.python.org/getting-started/pull-request-lifecycle/">CPython PR lifecycle</a></li>
+            <li><a href="https://devguide.python.org/getting-started/ai-tools/">CPython guidelines for AI tools</a></li>
+            <li><a href="https://github.com/rust-lang/leadership-council/issues/273">Rust low-effort contribution policy discussion</a></li>
+            <li><a href="https://github.com/rust-lang/compiler-team/issues/893">Rust compiler-team burdensome PR policy</a></li>
+            <li><a href="https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/submitting-patches/">Django submitting contributions</a></li>
+            <li><a href="https://docs.djangoproject.com/en/dev/internals/contributing/triaging-tickets/">Django triaging tickets</a></li>
+            <li><a href="https://github.com/reactjs/rfcs">React RFCs</a></li>
+            <li><a href="https://www.qemu.org/docs/master/devel/code-provenance.html">QEMU code provenance and AI-generated-content policy</a></li>
+            <li><a href="https://godotengine.org/article/contribution-policy-2026/">Godot contribution policy changes</a></li>
+            <li><a href="https://contributing.godotengine.org/en/latest/pull_requests/pull_request_guidelines.html">Godot pull-request guidelines</a></li>
+            <li><a href="https://daniel.haxx.se/blog/2026/01/26/the-end-of-the-curl-bug-bounty/">The end of the curl bug bounty</a></li>
+            <li><a href="https://daniel.haxx.se/blog/2026/06/29/do-excellent-vulnerability-reports/">curl: do excellent vulnerability reports</a></li>
+            <li><a href="https://llvm.org/docs/AIToolPolicy.html">LLVM AI Tool Use Policy</a></li>
+            <li><a href="https://docs.kernel.org/process/coding-assistants.html">Linux kernel AI coding assistants</a></li>
+            <li><a href="https://docs.kernel.org/process/generated-content.html">Linux kernel tool-generated content guidelines</a></li>
+            <li><a href="https://wiki.gentoo.org/wiki/Project:Council/AI_policy">Gentoo Council AI policy</a></li>
+          </ol>
+        </section>
+      </article>
+    </main>
+
+    <footer><div class="wrap">Research report 002. Public sources accessed in July 2026. Source links are embedded throughout. This report distinguishes public evidence from inference and does not claim policy-change causality where the evidence does not support it.</div></footer>
+  </div>
+</body>
+</html>
