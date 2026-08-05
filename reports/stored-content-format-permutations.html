@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A storage-only field guide to how WordPress site builders combine JSON, block markup, HTML, CSS, shortcodes, base64, PHP serialization, and cross-record references.">
+  <title>Stored Content Format Permutations in WordPress Site Builders</title>
+  <style>
+    :root {
+      --paper:#f4efe3; --ink:#211c16; --muted:#6f675d; --rule:#cfc4b2;
+      --faint:#e5dccd; --mark:#9b2c22; --green:#1f6f64; --blue:#315f79;
+      --note:#eee5d6; --code:#1d1b18; --code-ink:#f3eadb;
+      --serif:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,serif;
+      --sans:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--serif); line-height:1.58; }
+    a { color:var(--mark); text-decoration-thickness:.08em; text-underline-offset:.18em; }
+    main { width:min(1120px,calc(100% - 48px)); margin:0 auto; padding:54px 0 90px; }
+    .kicker { width:max-content; margin:0 0 24px; padding-top:9px; border-top:3px solid var(--ink); color:var(--mark); font:700 12px/1.35 var(--mono); letter-spacing:.09em; text-transform:uppercase; }
+    h1 { max-width:930px; margin:0 0 18px; font-size:clamp(3rem,7.8vw,6.8rem); line-height:.9; letter-spacing:-.065em; font-weight:500; }
+    .deck { max-width:810px; margin:0 0 28px; color:var(--muted); font-size:clamp(1.15rem,2.2vw,1.45rem); line-height:1.45; }
+    .byline { padding-bottom:30px; border-bottom:1px solid var(--rule); color:var(--muted); font:13px/1.55 var(--mono); }
+    h2 { margin:64px 0 18px; font-size:clamp(2rem,4.4vw,3.7rem); line-height:.98; letter-spacing:-.045em; font-weight:500; }
+    h3 { margin:0 0 8px; font-size:1.35rem; line-height:1.18; font-weight:600; }
+    p { max-width:820px; }
+    .summary { display:grid; grid-template-columns:1.4fr 1fr; gap:28px; margin:34px 0 0; }
+    .callout { padding:24px; background:var(--note); border:1px solid var(--rule); }
+    .callout strong { color:var(--mark); }
+    .legend { display:flex; flex-wrap:wrap; gap:8px; margin:20px 0; }
+    .badge { display:inline-flex; align-items:center; min-height:26px; padding:3px 8px; border:1px solid currentColor; border-radius:99px; font:700 10px/1.2 var(--mono); letter-spacing:.05em; text-transform:uppercase; }
+    .observed { color:var(--green); }
+    .documented { color:var(--blue); }
+    .boundary { color:var(--mark); }
+    .notation { margin:22px 0; padding:16px 20px; border-left:4px solid var(--mark); background:rgba(255,255,255,.26); font:14px/1.65 var(--mono); }
+    .matrix { width:100%; border-collapse:collapse; margin:22px 0 8px; font-family:var(--sans); font-size:.94rem; }
+    .matrix th,.matrix td { padding:12px 11px; border-top:1px solid var(--rule); vertical-align:top; text-align:left; }
+    .matrix th { color:var(--muted); font:700 11px/1.25 var(--mono); letter-spacing:.07em; text-transform:uppercase; }
+    .matrix code { font-family:var(--mono); font-size:.88em; }
+    .group-intro { max-width:780px; color:var(--muted); font-size:1.08rem; }
+    .chains { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:25px; }
+    .chain { position:relative; padding:21px 22px 20px; border:1px solid var(--rule); background:rgba(255,255,255,.18); }
+    .chain .number { position:absolute; top:18px; right:18px; color:var(--muted); font:700 11px/1 var(--mono); }
+    .chain h3 { padding-right:34px; }
+    .chain-path { margin:12px 0; padding:12px 14px; overflow-wrap:anywhere; background:var(--code); color:var(--code-ink); font:13px/1.65 var(--mono); }
+    .chain p { margin:8px 0 0; font-size:.98rem; }
+    .chain .source-note { margin-top:14px; color:var(--muted); font:12px/1.5 var(--mono); }
+    .warning { margin-top:34px; padding:22px 24px; border:2px solid var(--mark); }
+    .warning h3 { color:var(--mark); }
+    .sources { columns:2; column-gap:38px; padding-left:22px; }
+    .sources li { break-inside:avoid; margin:0 0 13px; padding-left:4px; }
+    footer { margin-top:70px; padding-top:22px; border-top:1px solid var(--rule); color:var(--muted); font:13px/1.6 var(--mono); }
+    @media (max-width:800px) { .summary,.chains { grid-template-columns:1fr; } .sources { columns:1; } }
+    @media (max-width:560px) { main { width:min(100% - 30px,1120px); padding-top:32px; } .matrix { display:block; overflow-x:auto; } .kicker { width:auto; } }
+    @media print { body { background:white; } main { width:auto; padding:0; } .chain { break-inside:avoid; } a { color:inherit; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker">Report 004 · Storage-only field guide</div>
+    <h1>Stored content format permutations</h1>
+    <p class="deck">How WordPress site builders actually layer JSON, block comments, HTML, CSS, shortcodes, base64, PHP serialization, and cross-record references—before anything is rendered.</p>
+    <p class="byline">5 August 2026 · Scope: canonical builder data, post content, post meta, options, public exports, and documented save formats · Rendered DOM and frontend caches excluded</p>
+  </header>
+
+  <section class="summary">
+    <div>
+      <h2>Not one format or the other</h2>
+      <p>Each database value has an outer storage grammar, but fields inside it can carry additional grammars. A JSON page can hold HTML, CSS, a shortcode, or an encoded builder token. WordPress block markup deliberately combines JSON attributes in comments with saved HTML. A shortcode can contain base64 that decodes to JavaScript. A PHP-serialized array can contain byte-counted HTML.</p>
+      <p>The practical unit is therefore a <em>storage chain</em>: start with the outermost grammar, then descend only through fields whose schema defines another grammar.</p>
+    </div>
+    <aside class="callout">
+      <strong>Source correction.</strong> Controlled WordPress Playground saves in the earlier builder report prove save-path behavior, but their populated values were test fixtures. They are not treated here as naturally authored examples. This report distinguishes public stored artifacts from vendor-documented storage and does not use rendered HTML as proof.
+    </aside>
+  </section>
+
+  <div class="legend">
+    <span class="badge observed">Observed public artifact</span>
+    <span class="badge documented">Officially documented storage</span>
+    <span class="badge boundary">Source boundary noted</span>
+  </div>
+  <div class="notation"><b>→</b> nested in the same stored value &nbsp;·&nbsp; <b>+</b> sibling representations in the same value &nbsp;·&nbsp; <b>⇢</b> reference to another stored record</div>
+
+  <table class="matrix">
+    <thead><tr><th>Outer storage</th><th>Builders found</th><th>Important inner grammars</th><th>Primary migration rule</th></tr></thead>
+    <tbody>
+      <tr><td>JSON</td><td>Elementor; Oxygen 6 public exports</td><td>HTML, SVG, CSS, shortcodes, builder tokens, media/reference graphs</td><td>Decode JSON first; dispatch by known field schema.</td></tr>
+      <tr><td>Block markup</td><td>WordPress Block/Site Editors and block add-ons</td><td>Comment JSON, saved HTML, nested blocks, inline CSS, shortcodes</td><td>Use WordPress block parsing and serialization.</td></tr>
+      <tr><td>Shortcodes</td><td>WPBakery</td><td>Base64, percent-encoded text, HTML, JavaScript</td><td>Tokenize the shortcode, then decode each documented layer in order.</td></tr>
+      <tr><td>PHP serialization</td><td>Bricks</td><td>Arrays, IDs, relationship graphs, separate global stores</td><td>Unserialize, modify typed values, and reserialize.</td></tr>
+      <tr><td>Coordinated meta</td><td>Thrive Architect</td><td>Canonical HTML, separate CSS, globals, events, simplified text</td><td>Treat the save fields as one coordinated operation.</td></tr>
+    </tbody>
+  </table>
+
+  <section>
+    <h2>JSON storage chains</h2>
+    <p class="group-intro">Elementor and Oxygen demonstrate that “plain JSON” is only a statement about the outer envelope. Their JSON values can still contain code, markup, encoded settings, and reference graphs. The Oxygen source material is component/clipboard and selector-export JSON: it proves those export shapes and UUID links, not the private SQL or post-meta envelope.</p>
+    <div class="chains">
+      <article class="chain"><span class="number">01</span><h3>JSON element tree</h3><div class="chain-path">JSON → elements[] → settings + children</div><p>Elementor stores page configuration and content as JSON in post meta; Oxygen exports element records with nested children.</p><p class="source-note"><span class="badge documented">Documented</span> Elementor data structure · <span class="badge observed">Observed</span> public Elementor/Oxygen exports</p></article>
+      <article class="chain"><span class="number">02</span><h3>JSON repeater and object arrays</h3><div class="chain-path">JSON → settings → items[] → item fields</div><p>Slides, tabs, links, breakpoint settings, and other repeaters introduce additional object/list layers without changing the outer grammar.</p><p class="source-note"><span class="badge observed">Observed</span> public Elementor templates</p></article>
+      <article class="chain"><span class="number">03</span><h3>Media object with ID and URL</h3><div class="chain-path">JSON → media → id + url</div><p>A resource is not always represented by one URL. Elementor commonly keeps the attachment ID beside it.</p><p class="source-note"><span class="badge observed">Observed</span> Codeinwp Elementor templates</p></article>
+      <article class="chain"><span class="number">04</span><h3>Media object with size map</h3><div class="chain-path">JSON → media → sizes → thumbnail.url + full.url + …</div><p>Oxygen exports preserve the primary URL plus per-size URLs and metadata, producing several migration targets for one attachment.</p><p class="source-note"><span class="badge observed">Observed</span> public Oxygen 6 component export</p></article>
+      <article class="chain"><span class="number">05</span><h3>HTML string inside JSON</h3><div class="chain-path">JSON → settings.editor → HTML</div><p>Elementor Text Editor and rich-description fields store literal HTML strings inside the JSON document.</p><p class="source-note"><span class="badge observed">Observed</span> public Elementor template exports</p></article>
+      <article class="chain"><span class="number">06</span><h3>HTML containing inline SVG</h3><div class="chain-path">JSON → settings.html → HTML → &lt;svg&gt; descendants</div><p>A public Elementor HTML-widget template stores form controls and literal SVG elements in the JSON string.</p><p class="source-note"><span class="badge observed">Observed</span> Elementor Expandable Search template</p></article>
+      <article class="chain"><span class="number">07</span><h3>Raw CSS string</h3><div class="chain-path">JSON → custom_css → CSS selectors + declarations</div><p>Public Elementor and Oxygen exports contain unparsed CSS strings, including pseudo-classes, custom properties, functions, and keyframes.</p><p class="source-note"><span class="badge observed">Observed</span> Elementor and Oxygen exports</p></article>
+      <article class="chain"><span class="number">08</span><h3>Structured CSS values</h3><div class="chain-path">JSON → property → number + unit + formatted style</div><p>Oxygen can store both a typed value and its CSS spelling. These values must remain internally consistent.</p><p class="source-note"><span class="badge observed">Observed</span> Oxygen 6 selector export</p></article>
+      <article class="chain"><span class="number">09</span><h3>Variable and UUID tokens</h3><div class="chain-path">JSON → CSS-like field → {var-UUID}</div><p>The string is a builder reference token, not ordinary CSS custom-property syntax. It resolves through a separate reference graph.</p><p class="source-note"><span class="badge observed">Observed</span> Oxygen 6 selector export</p></article>
+      <article class="chain"><span class="number">10</span><h3>Shortcode inside JSON</h3><div class="chain-path">JSON → settings.shortcode → WordPress shortcode</div><p>Public Elementor exports store third-party shortcode text as the value of a widget setting.</p><p class="source-note"><span class="badge observed">Observed</span> Codeinwp Elementor template</p></article>
+      <article class="chain"><span class="number">11</span><h3>Dynamic tag with encoded JSON</h3><div class="chain-path">JSON → [elementor-tag … settings="%7B…%7D"] → percent-decoded JSON</div><p>An actual <code>_elementor_data</code> dump shows a shortcode-like Elementor token whose attribute contains percent-encoded JSON settings.</p><p class="source-note"><span class="badge observed">Observed</span> public Elementor replacement issue</p></article>
+      <article class="chain"><span class="number">12</span><h3>JSON component plus separate selector export</h3><div class="chain-path">component export JSON ⇢ selector export JSON → classes + breakpoints + variables</div><p>Oxygen’s public component and selector exports expose linked UUIDs across two JSON representations. They do not establish the exact database envelope.</p><p class="source-note"><span class="badge observed">Observed</span> two public Oxygen 6 exports</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Block markup storage chains</h2>
+    <p class="group-intro">The block editor’s canonical representation is intentionally hybrid. The 30 inspected core and Otter registered patterns are natural vendor/core pattern source saved and read through WordPress—not generated content fixtures.</p>
+    <div class="chains">
+      <article class="chain"><span class="number">13</span><h3>Dynamic block comment</h3><div class="chain-path">post_content → &lt;!-- wp:name {JSON} /--&gt;</div><p>A self-closing block may contain JSON attributes with no saved HTML of its own.</p><p class="source-note"><span class="badge observed">Observed</span> 16 of 30 inspected patterns</p></article>
+      <article class="chain"><span class="number">14</span><h3>Static block hybrid</h3><div class="chain-path">comment JSON + saved HTML + closing comment</div><p>The JSON attribute representation and HTML representation coexist in one <code>post_content</code> string.</p><p class="source-note"><span class="badge observed">Observed</span> all 30 patterns · <span class="badge documented">Documented</span> WordPress handbook</p></article>
+      <article class="chain"><span class="number">15</span><h3>Nested block hybrids</h3><div class="chain-path">block JSON + HTML → nested block JSON + nested HTML → …</div><p>Every inspected pattern nested additional block delimiters inside the outer block’s saved HTML region.</p><p class="source-note"><span class="badge observed">Observed</span> all 30 patterns</p></article>
+      <article class="chain"><span class="number">16</span><h3>Structured style plus inline CSS</h3><div class="chain-path">comment JSON.style + saved HTML.style="CSS"</div><p>The same design intent can appear as a nested JSON style object and as generated inline declarations in the saved block HTML.</p><p class="source-note"><span class="badge observed">Observed</span> both representations in 17 patterns</p></article>
+      <article class="chain"><span class="number">17</span><h3>Preset token plus CSS custom property</h3><div class="chain-path">JSON: var:preset|spacing|50 + HTML: var(--wp--preset--spacing--50)</div><p>WordPress serializes the editor-side preset token and its CSS spelling differently within the same block representation.</p><p class="source-note"><span class="badge observed">Observed</span> 14 patterns</p></article>
+      <article class="chain"><span class="number">18</span><h3>URL duplicated across representations</h3><div class="chain-path">comment JSON.url + saved HTML &lt;img src="…"&gt;</div><p>Image, cover, embed, and custom-block patterns may preserve one resource in both the block attributes and the saved HTML.</p><p class="source-note"><span class="badge observed">Observed</span> core and Otter patterns</p></article>
+      <article class="chain"><span class="number">19</span><h3>Custom HTML block</h3><div class="chain-path">block delimiter → literal HTML payload</div><p>The block grammar wraps an explicitly HTML-valued body. WordPress identifies this as a static block saved directly in post content.</p><p class="source-note"><span class="badge documented">Documented</span> WordPress core block reference</p></article>
+      <article class="chain"><span class="number">20</span><h3>Shortcode block</h3><div class="chain-path">block delimiter → shortcode text</div><p>The outer parser is the block parser; the block body then has WordPress shortcode grammar.</p><p class="source-note"><span class="badge documented">Documented</span> WordPress Shortcode and Block APIs</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Shortcode storage chains</h2>
+    <p class="group-intro">WPBakery documents its shortcode parameter encoding, and a natural public page-layout source exposes the extra percent-encoding layer used by a real <code>vc_raw_html</code> payload.</p>
+    <div class="chains">
+      <article class="chain"><span class="number">21</span><h3>Base64 and percent-encoded raw HTML</h3><div class="chain-path">WPBakery shortcode → base64 → percent-encoded text → HTML</div><p>A public <code>vc_raw_html</code> source requires base64 decoding followed by URL decoding before it becomes HTML.</p><p class="source-note"><span class="badge observed">Observed</span> public WPBakery layout source · <span class="badge documented">Documented</span> WPBakery parameter API</p></article>
+      <article class="chain"><span class="number">22</span><h3>Base64 raw JavaScript</h3><div class="chain-path">WPBakery shortcode → base64 → JavaScript</div><p>The documented <code>textarea_raw_html</code> parameter type is intended for raw JavaScript as well as raw HTML.</p><p class="source-note"><span class="badge documented">Documented</span> WPBakery parameter API; no natural stored sample counted</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Serialized and multi-record storage</h2>
+    <p class="group-intro">Some builders add another constraint: values are either protected by PHP serialization byte counts or distributed across multiple database records that must stay synchronized.</p>
+    <div class="chains">
+      <article class="chain"><span class="number">23</span><h3>PHP-serialized element arrays</h3><div class="chain-path">PHP serialization → elements[] → settings</div><p>Bricks documents serialized element arrays in three page-area post-meta keys.</p><p class="source-note"><span class="badge documented">Documented</span> Bricks data model</p></article>
+      <article class="chain"><span class="number">24</span><h3>Serialized flat parent graph</h3><div class="chain-path">PHP serialization → elements[] → id + parent + children[]</div><p>Bricks stores flat element records with relationship fields, combining serialization integrity with graph integrity.</p><p class="source-note"><span class="badge documented">Documented</span> Bricks data model</p></article>
+      <article class="chain"><span class="number">25</span><h3>Serialized page plus serialized global stores</h3><div class="chain-path">serialized page data ⇢ separately serialized wp_options</div><p>Bricks stores classes, variables, theme styles, palettes, breakpoints, and components separately. References differ: classes and component instances use IDs, variables use CSS custom properties, breakpoints use key suffixes, and theme styles use conditions.</p><p class="source-note"><span class="badge documented">Documented</span> Bricks data model</p></article>
+      <article class="chain"><span class="number">26</span><h3>Canonical HTML in post meta</h3><div class="chain-path">tve_updated_post → Architect HTML</div><p>Thrive identifies this field—not a rendered page response—as the canonical Architect layout source.</p><p class="source-note"><span class="badge documented">Documented</span> Thrive Architect REST API</p></article>
+      <article class="chain"><span class="number">27</span><h3>HTML plus optional coordinated CSS and state</h3><div class="chain-path">HTML meta + optional CSS + globals + events + simplified content</div><p>An editor-equivalent Thrive save can include canonical HTML, editor/user CSS, globals, events, feature flags, symbol IDs, and stripped/simplified content used for <code>post_content</code> migration paths. Not every field is present on every page.</p><p class="source-note"><span class="badge documented">Documented</span> Thrive Architect REST API</p></article>
+      <article class="chain"><span class="number">28</span><h3>Elementor template referenced by a block</h3><div class="chain-path">block attributes.selectedTemplate ⇢ Elementor template post → _elementor_data JSON</div><p>The official dynamic block stores a numeric template-post ID in <code>selectedTemplate</code>; the Elementor document lives in that template post’s metadata.</p><p class="source-note"><span class="badge documented">Documented</span> Elementor Blocks for Gutenberg 1.1.5 source</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Source-confirmed boundary cases</h2>
+    <div class="warning">
+      <h3>Real feature paths still awaiting a natural public stored artifact</h3>
+      <p>Elementor 3.26 can render Gutenberg blocks alongside Elementor widgets, but the available sources define separate inputs—<code>_elementor_data</code> JSON and block markup in <code>post_content</code>—not block comments nested inside a Text Editor setting. No naturally authored public record demonstrating <code>settings.editor → block markup</code> was found, so that permutation is excluded.</p>
+      <p>Likewise, controlled Beaver Builder and SiteOrigin saves verified their serialization paths, but their populated values were fixtures. Those paths are not counted among the permutations above.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What was deliberately excluded</h2>
+    <ul>
+      <li>Every frontend-rendered DOM fragment and every signal found only after rendering.</li>
+      <li>Generated CSS files and HTML caches unless the vendor identifies them as canonical authoring data.</li>
+      <li>Hypothetical PHP-serialization examples not emitted by a real builder save path.</li>
+      <li>Controlled fixture values as proof of prevalence or naturally authored content.</li>
+      <li>Claims that an add-on inherits every storage behavior of its parent builder without a stored artifact or vendor source.</li>
+    </ul>
+    <p>The permutation set is not mathematically finite: raw HTML/code controls can hold arbitrary sublanguages. The 28 entries above are the materially distinct storage paths substantiated by current public artifacts or explicit vendor storage documentation.</p>
+  </section>
+
+  <section>
+    <h2>Primary sources</h2>
+    <ol class="sources">
+      <li><a href="https://developers.elementor.com/docs/data-structure/">Elementor data structure and post-meta storage</a></li>
+      <li><a href="https://github.com/Codeinwp/obfx-templates/blob/master/contact-us-elementor/template.json">Public Elementor template with HTML and shortcode settings</a></li>
+      <li><a href="https://gist.github.com/wpeasy/7bee1c9c0bf3befac7f890361735d390">Public Elementor HTML/SVG and custom-CSS template</a></li>
+      <li><a href="https://github.com/short-pixel-optimizer/enable-media-replace/issues/39">Real Elementor data dump with encoded dynamic-tag settings</a></li>
+      <li><a href="https://developers.elementor.com/elementor-3-26-developers-update/">Elementor 3.26 Gutenberg block support</a></li>
+      <li><a href="https://elementor.com/help/elementor-blocks-for-gutenberg/">Elementor Blocks for Gutenberg template references</a></li>
+      <li><a href="https://downloads.wordpress.org/plugin/block-builder.1.1.5.zip">Elementor Blocks for Gutenberg 1.1.5 source archive</a></li>
+      <li><a href="https://developer.wordpress.org/block-editor/getting-started/fundamentals/markup-representation-block/">WordPress block markup representation</a></li>
+      <li><a href="https://developer.wordpress.org/block-editor/reference-guides/core-blocks/core-blocks-widgets/core-block-html/">WordPress Custom HTML block</a></li>
+      <li><a href="https://developer.wordpress.org/apis/shortcode/">WordPress Shortcode API</a></li>
+      <li><a href="https://wordpress.org/wordpress-7.0.2.zip">WordPress 7.0.2 source used for core pattern captures</a></li>
+      <li><a href="https://downloads.wordpress.org/plugin/otter-blocks.3.2.1.zip">Otter Blocks 3.2.1 source used for pattern captures</a></li>
+      <li><a href="https://kb.wpbakery.com/devs/element-development/params-array/">WPBakery parameter storage and base64 raw HTML</a></li>
+      <li><a href="https://gist.github.com/dancingsoda/88050874d8a22cae6eb5d197d69348ab">Public WPBakery layout source with vc_raw_html</a></li>
+      <li><a href="https://academy.bricksbuilder.io/developer/schema/">Bricks serialized data model and global stores</a></li>
+      <li><a href="https://thrivethemes.com/docs/accessing-and-updating-thrive-architect-content-through-the-wordpress-rest-api/">Thrive Architect canonical HTML and coordinated meta fields</a></li>
+      <li><a href="https://gist.github.com/KittenCodes/7e84d6a27fb8b8dab768bb7d116d6a61">Public Oxygen 6 component export</a></li>
+      <li><a href="https://gist.github.com/KittenCodes/911782871f7e171064bfd43c2f0d419d">Public Oxygen 6 selector export</a></li>
+    </ol>
+  </section>
+
+  <footer>Published in the LLM Research archive. This report is storage-only by design; it should not be used as a description of frontend markup.</footer>
+</main>
+</body>
+</html>
