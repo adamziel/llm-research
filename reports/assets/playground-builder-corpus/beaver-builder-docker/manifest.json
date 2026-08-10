@@ -14,6 +14,7 @@
     "Events Manager": "7.4.2"
   },
   "browser_authoring": {
+    "builder_layout": "Field Guide was opened and saved in Beaver Builder; the captured post_content is Gutenberg block markup, while Beaver Builder layout data is stored separately.",
     "form": "Forminator UI, published shortcode [forminator_form id=\"17\"]",
     "event": "Events Manager UI, published event Tidal Field Workshop",
     "products": "WooCommerce UI, six published products",
