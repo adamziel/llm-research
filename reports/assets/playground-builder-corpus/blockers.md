@@ -93,3 +93,18 @@ kadenceTab.waitForEvent is not a function
 ```
 
 The UI click completed, but no ZIP appeared in the host Downloads directory or temporary directories. The Playground MCP did reconnect and could query the active site's `wp_posts` table, but this MCP version does not expose a site-export command. The corrected ZIP is therefore not advertised in the report until the download can be materialized as a host file.
+
+## GitHub Pages is disabled (2026-08-10)
+
+The repository is public and `main` accepts pushes, but GitHub Pages has not been enabled for it. The report and static assets therefore remain available in the repository and via `raw.githubusercontent.com`, not at the previously assumed Pages address.
+
+Reproduction from any shell:
+
+```sh
+curl -L --fail https://adamziel.github.io/llm-research/reports/playground-builder-corpus.html
+# curl: (56) The requested URL returned error: 404
+curl -L --fail https://api.github.com/repos/adamziel/llm-research/pages
+# curl: (56) The requested URL returned error: 404
+```
+
+`gh auth status` also reports that the configured `adamziel` GitHub token is invalid, so this session cannot enable Pages through the GitHub API. A repository administrator must enable Pages (for example, deploy from `main` at `/`) or provide a valid token with repository administration permission. Once enabled, the report route is `reports/playground-builder-corpus.html` and the archive URLs embedded by the report use that same base.
