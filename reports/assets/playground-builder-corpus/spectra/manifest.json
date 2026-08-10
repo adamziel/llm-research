@@ -1,0 +1,12 @@
+{
+  "site_id": "honest-busy-garden",
+  "wordpress_version": "7.0.2",
+  "php_version": "8.3.32",
+  "theme": "Twenty Twenty-Five",
+  "builder": {
+    "name": "Spectra Legacy \u2013 Gutenberg Blocks",
+    "version": "2.20.1"
+  },
+  "plugin_entry": "ultimate-addons-for-gutenberg.php",
+  "source": "browser-exported-playground-site.zip"
+}

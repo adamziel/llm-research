@@ -1,0 +1,18 @@
+{
+    "site_id": "patient-sunny-ocean",
+    "site_name": "My WordPress Website",
+    "wordpress_version": "7.0.2",
+    "php_version": "8.3.32",
+    "theme": "Twenty Twenty-Five",
+    "theme_version": "1.5",
+    "active_plugins": {
+        "elementor\/elementor.php": {
+            "name": "Elementor",
+            "version": "4.2.2"
+        },
+        "woocommerce\/woocommerce.php": {
+            "name": "WooCommerce",
+            "version": "11.0.0"
+        }
+    }
+}

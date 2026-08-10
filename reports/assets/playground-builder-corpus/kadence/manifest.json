@@ -1,0 +1,11 @@
+{
+  "site_id": "confident-classic-river",
+  "wordpress_version": "7.0.2",
+  "php_version": "8.3.32",
+  "theme": "Twenty Twenty-Five",
+  "builder": {
+    "name": "Kadence Blocks",
+    "version": "3.7.9"
+  },
+  "source": "browser-exported-playground-site.zip"
+}
