@@ -1,0 +1,12 @@
+{
+  "builder": "WPBakery Page Builder / Visual Composer",
+  "artifact_kind": "public WordPress WXR demo export",
+  "raw_post_content_record": "post-content.json",
+  "source_repository": "https://github.com/AndersonHJB/bootstrapmb",
+  "source_commit": "49559ef2228a8be66809cfacca597490901b6dc4",
+  "source_url": "https://raw.githubusercontent.com/AndersonHJB/bootstrapmb/49559ef2228a8be66809cfacca597490901b6dc4/muban/Pressroom/Pressroom/%E7%A4%BA%E4%BE%8B%E6%95%B0%E6%8D%AE/dummy-data.xml",
+  "source_file_sha256": "e5efd7881fe7115776393e95dd6cb08f4f4ecdd32191f48a3ced1e475e13af90",
+  "row_count": 21,
+  "license_note": "No license file was present in the source repository at this pinned commit. The source URL is retained with every record.",
+  "rendering_status": "Not rendered here. The source layouts use the Pressroom theme together with WPBakery and theme-specific shortcodes, and this artifact is not a self-contained site ZIP."
+}
