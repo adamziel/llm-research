@@ -77,3 +77,19 @@ In Add Plugins, install each of the two search results below:
 ### UI result
 
 Each install control changed to `Update failed.` The initial attempt used the same stale installer nonce pattern described above. In a fresh site, repeating the install after the inner WordPress frame loaded a current nonce completed the install; **Spectra Legacy – Gutenberg Blocks 2.20.1** is now active and its exported artifacts are included in the report.
+
+## 2026-08-10 — in-app Browser ZIP handoff
+
+### Reproduction
+
+1. In the saved Kadence Playground, open **Export**.
+2. Click **Download as .zip** after the Playground reports that it is loaded.
+3. Attempt to wait for the browser download through the in-app Browser control API.
+
+### Tool result
+
+```
+kadenceTab.waitForEvent is not a function
+```
+
+The UI click completed, but no ZIP appeared in the host Downloads directory or temporary directories. The Playground MCP did reconnect and could query the active site's `wp_posts` table, but this MCP version does not expose a site-export command. The corrected ZIP is therefore not advertised in the report until the download can be materialized as a host file.
