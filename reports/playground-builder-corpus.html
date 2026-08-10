@@ -9,21 +9,24 @@
 </style>
 </head>
 <body><main class="wrap">
-<header><p class="pill">Work in progress</p><h1>WordPress Playground builder markup corpus</h1><p>Database-captured builder page content and complete Playground exports. Every displayed raw record is loaded from its saved JSON artifact.</p></header>
-<p class="notice"><strong>Current run:</strong> Elementor, SiteOrigin, Kadence, and Spectra artifacts are available below. Brizy causes a WordPress fatal error after activation. Spectra and Kadence installs initially failed because their WordPress installer nonce was stale; both succeeded after reloading the inner WordPress frame. <a href="assets/playground-builder-corpus/blockers.md">DevTools failure log and reproduction steps</a>.</p>
+<header><p class="pill">Work in progress</p><h1>WordPress Playground builder markup corpus</h1><p>Database-captured builder page content and site exports. Every displayed raw record is loaded from its saved JSON artifact.</p></header>
+<p class="notice"><strong>Current run:</strong> Elementor, SiteOrigin, Kadence, Spectra, and a Docker-hosted Beaver Builder run are available below. Brizy causes a WordPress fatal error after activation. Spectra and Kadence installs initially failed because their WordPress installer nonce was stale; both succeeded after reloading the inner WordPress frame. <a href="assets/playground-builder-corpus/blockers.md">DevTools failure log and reproduction steps</a>.</p>
 <div class="grid" id="sites"></div>
 <script>
 const sites=[
  {slug:'elementor',name:'Elementor',version:'4.2.2',shot:'field-guide.png',zip:'site.zip'},
  {slug:'siteorigin',name:'Page Builder by SiteOrigin',version:'2.36.0',shot:'field-guide.png',zip:'site.zip'},
  {slug:'kadence',name:'Kadence Blocks',version:'3.7.9',shot:'field-guide.png',zip:'site.zip'},
- {slug:'spectra',name:'Spectra Legacy – Gutenberg Blocks',version:'2.20.1',shot:'field-guide.png',zip:'site.zip'}
+ {slug:'spectra',name:'Spectra Legacy – Gutenberg Blocks',version:'2.20.1',shot:'field-guide.png',zip:'site.zip'},
+ {slug:'beaver-builder-docker',name:'Beaver Builder Lite (Docker)',version:'2.10.2.2',shot:'fieldGuide.png',docker:true}
 ];
 const base='assets/playground-builder-corpus/';
 const decode=s=>new TextDecoder().decode(Uint8Array.from(atob(s),c=>c.charCodeAt(0)));
 for(const site of sites){
  const card=document.createElement('article');card.className='card';
- card.innerHTML=`<img src="${base+site.slug+'/'+site.shot}" alt="${site.name} Field Guide screenshot"><section><span class="pill">${site.name} ${site.version}</span><h2>${site.name}</h2><p><a href="${base+site.slug+'/'+site.zip}">Download site ZIP</a> · <a href="https://playground.wordpress.net/?import-site=https://adamziel.github.io/llm-research/reports/${base+site.slug+'/'+site.zip}">Open in Playground</a></p><p class="meta">Raw page content is loaded from the database record, with SHA-256 and byte-exact base64.</p><div class="records">Loading database record…</div></section>`;
+ const archive=base+site.slug+'/'+site.zip;
+ const links=site.docker ? `<a href="${base+site.slug+'/manifest.json'}">Manifest</a><br><span class="meta">Screenshots and database page records are published. The local Docker archive is withheld because it includes deployment secrets.</span>` : `<a href="${archive}">Download site ZIP</a> · <a href="https://playground.wordpress.net/?import-site=https://adamziel.github.io/llm-research/reports/${archive}">Open in Playground</a>`;
+ card.innerHTML=`<img src="${base+site.slug+'/'+site.shot}" alt="${site.name} Field Guide screenshot"><section><span class="pill">${site.name} ${site.version}</span><h2>${site.name}</h2><p>${links}</p><p class="meta">Raw page content is loaded from the database record, with SHA-256 and byte-exact base64.</p><div class="records">Loading database record…</div></section>`;
  document.querySelector('#sites').append(card);
  fetch(base+site.slug+'/post-content.json').then(r=>r.json()).then(record=>{
   const box=card.querySelector('.records');box.replaceChildren();

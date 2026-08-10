@@ -1,0 +1,40 @@
+{
+  "runtime": "Docker Compose",
+  "export_status": "The local Docker archive and MySQL dump are intentionally not published because they contain deployment secrets.",
+  "wordpress": "7.0.2",
+  "php": "8.3.33",
+  "theme": {
+    "name": "Twenty Twenty-Five",
+    "version": "1.5"
+  },
+  "plugins": {
+    "Beaver Builder Lite": "2.10.2.2",
+    "WooCommerce": "11.0.0",
+    "Forminator": "1.56.2",
+    "Events Manager": "7.4.2"
+  },
+  "browser_authoring": {
+    "form": "Forminator UI, published shortcode [forminator_form id=\"17\"]",
+    "event": "Events Manager UI, published event Tidal Field Workshop",
+    "products": "WooCommerce UI, six published products",
+    "pages": [
+      "Home",
+      "Contact",
+      "Field Guide",
+      "Shop"
+    ]
+  },
+  "frontend_checks": {
+    "home": "Business homepage block pattern rendered",
+    "contact": "Forminator form and OpenStreetMap iframe rendered",
+    "field-guide": "Custom HTML/CSS, JSON-LD, YAML, data attributes, and Events Manager calendar rendered",
+    "shop": "Six WooCommerce products rendered via [products] shortcode"
+  },
+  "post_content_record": "post-content.json",
+  "screenshots": [
+    "home.png",
+    "contact.png",
+    "fieldGuide.png",
+    "shop.png"
+  ]
+}

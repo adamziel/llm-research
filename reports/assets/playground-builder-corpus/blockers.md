@@ -55,6 +55,16 @@ The same result occurred after copying the zip to both writable workspace roots.
 
 The browser moved to `/wp-admin/admin.php?page=getting-started` and displayed the standard WordPress critical-error screen: `There has been a critical error on this website.` The administrative screen and PHP bootstrap remained unavailable for the site afterwards.
 
+### Log follow-up
+
+After the later desktop restart, the Playground MCP returned this exact connection state when asked to enumerate the site for its logs:
+
+```
+{"connectedTabs":0,"sites":[],"message":"No browser connected. Open the Playground website at https://playground.wordpress.net/?mcp-port=56390 to connect."}
+```
+
+Consequently, no server-side Brizy stack trace or SQL error could be recovered from that stopped Playground session. The visible browser result above is retained rather than guessing at a database cause. The replacement Beaver Builder run was created in Docker; its WordPress and MySQL logs contain no plugin-activation errors.
+
 ## Spectra attempts
 
 ### Reproduction
