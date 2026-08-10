@@ -1,0 +1,21 @@
+{
+  "builder": "Divi",
+  "builder_generation": "Divi 5",
+  "artifact_kind": "official public demo editor serialization",
+  "raw_post_content_record": "post-content.json",
+  "source_url": "https://demo.elegantthemes.com/?et_fb=1&disableUpdateCacheData=1&app_window=1",
+  "source_response_sha256": "395290c4172878ce6225a2c9763d887202d6e5ebad721cf641d3bf5ef0f3dee6",
+  "rendering_status": "The official Divi demo is public, but no self-contained site ZIP is available from this artifact.",
+  "content_shape": {
+    "bytes": 20475,
+    "blocks": {
+      "divi/section": 3,
+      "divi/row": 5,
+      "divi/column": 8,
+      "divi/heading": 7,
+      "divi/text": 6,
+      "divi/image": 7,
+      "divi/button": 3
+    }
+  }
+}

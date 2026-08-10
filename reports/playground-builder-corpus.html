@@ -19,16 +19,17 @@ const sites=[
  {slug:'kadence-repaired',name:'Kadence Blocks',version:'3.7.9',shot:'shop.png',verified:true},
  {slug:'spectra',name:'Spectra Legacy – Gutenberg Blocks',version:'2.20.1',shot:'field-guide.png',zip:'site.zip'},
  {slug:'beaver-builder-docker',name:'Beaver Builder Lite (Docker)',version:'2.10.2.2',shot:'fieldGuide.png',docker:true},
- {slug:'divi-public-layout-export',name:'Divi 4 public layout export',version:'4.0.7',external:true,source:'https://gist.github.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6'}
+ {slug:'divi-public-layout-export',name:'Divi 4 public layout export',version:'4.0.7',external:true,source:'https://gist.github.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6'},
+ {slug:'divi-5-official-demo-editor',name:'Divi 5 official demo editor content',version:'5.4.0',external:true,official:true,source:'https://demo.elegantthemes.com/?et_fb=1&disableUpdateCacheData=1&app_window=1'}
 ];
 const base='assets/playground-builder-corpus/';
 const decode=s=>new TextDecoder().decode(Uint8Array.from(atob(s),c=>c.charCodeAt(0)));
 for(const site of sites){
  const card=document.createElement('article');card.className='card';
  const archive=base+site.slug+'/'+site.zip;
- const links=site.external ? `<a href="${site.source}">Original public export</a> · <a href="${base+site.slug+'/manifest.json'}">Source manifest</a><br><span class="meta">This is a public Divi layout export, not a self-contained site or live database capture.</span>` : site.docker ? `<a href="${base+site.slug+'/manifest.json'}">Manifest</a><br><span class="meta">Screenshots and database page records are published. The local Docker archive is withheld because it includes deployment secrets.</span>` : site.verified ? `<span class="meta">Browser-checked corrected screenshot and database capture. Corrected site ZIP export is pending.</span>` : `<a href="${archive}">Download site ZIP</a> · <a href="https://playground.wordpress.net/?import-site=https://adamziel.github.io/llm-research/reports/${archive}">Open in Playground</a>`;
+ const links=site.external ? `<a href="${site.source}">${site.official ? 'Official Divi demo' : 'Original public export'}</a> · <a href="${base+site.slug+'/manifest.json'}">Source manifest</a><br><span class="meta">${site.official ? 'This is the official current Divi demo editor payload, not a self-contained site or database query.' : 'This is a public Divi layout export, not a self-contained site or live database capture.'}</span>` : site.docker ? `<a href="${base+site.slug+'/manifest.json'}">Manifest</a><br><span class="meta">Screenshots and database page records are published. The local Docker archive is withheld because it includes deployment secrets.</span>` : site.verified ? `<span class="meta">Browser-checked corrected screenshot and database capture. Corrected site ZIP export is pending.</span>` : `<a href="${archive}">Download site ZIP</a> · <a href="https://playground.wordpress.net/?import-site=https://adamziel.github.io/llm-research/reports/${archive}">Open in Playground</a>`;
  const image=site.shot ? `<img src="${base+site.slug+'/'+site.shot}" alt="${site.name} Shop screenshot">` : '';
- const recordLabel=site.external ? 'Raw post_content is read from the public export record, with SHA-256 and byte-exact base64.' : 'Raw page content is loaded from the database record, with SHA-256 and byte-exact base64.';
+ const recordLabel=site.external ? 'Raw post_content is read from the saved public-source record, with SHA-256 and byte-exact base64.' : 'Raw page content is loaded from the database record, with SHA-256 and byte-exact base64.';
  card.innerHTML=`${image}<section><span class="pill">${site.name} ${site.version}</span><h2>${site.name}</h2><p>${links}</p><p class="meta">${recordLabel}</p><div class="records">Loading saved record…</div></section>`;
  document.querySelector('#sites').append(card);
  fetch(base+site.slug+'/post-content.json').then(r=>r.json()).then(record=>{
