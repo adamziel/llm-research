@@ -108,3 +108,21 @@ curl -L --fail https://api.github.com/repos/adamziel/llm-research/pages
 ```
 
 `gh auth status` also reports that the configured `adamziel` GitHub token is invalid, so this session cannot enable Pages through the GitHub API. A repository administrator must enable Pages (for example, deploy from `main` at `/`) or provide a valid token with repository administration permission. Once enabled, the report route is `reports/playground-builder-corpus.html` and the archive URLs embedded by the report use that same base.
+
+## Chrome DevTools connection unavailable (2026-08-10)
+
+### Reproduction
+
+Attempt to select the Chrome browser surface before opening the public Divi visual builder:
+
+```js
+await agent.browsers.get("chrome")
+```
+
+### Tool result
+
+```text
+Browser is not available: chrome
+```
+
+This capture used the public visual-builder response rather than Chrome UI automation. The source record names that retrieval method and does not claim a DevTools-driven editor interaction.
