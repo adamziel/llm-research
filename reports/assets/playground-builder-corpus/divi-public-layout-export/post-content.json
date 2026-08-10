@@ -1,0 +1,37 @@
+{
+  "captured_from": "Public Divi 4 layout-export JSON post object; not a live database query",
+  "builder": "Divi",
+  "builder_version_in_markup": "4.0.7",
+  "source_repository": "https://gist.github.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6",
+  "source_commit": "caa52dcf60e97116a89a08ca9e2ee7bad2f82800",
+  "source_commit_url": "https://gist.github.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6/caa52dcf60e97116a89a08ca9e2ee7bad2f82800",
+  "notes": "The source JSON contains each record under data.*.post_content. The byte-exact field value is preserved below as base64.",
+  "rows": [
+    {
+      "post_id": 224,
+      "post_title": "tb-global-header-full-width",
+      "post_name": "tb-global-header-full-width",
+      "post_type": "et_pb_layout",
+      "post_status": "publish",
+      "source_file": "tb-global-header-full-width.json",
+      "source_url": "https://gist.githubusercontent.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6/raw/caa52dcf60e97116a89a08ca9e2ee7bad2f82800/tb-global-header-full-width.json",
+      "source_file_sha256": "f6eeb938e1bc821197bff34820b1a3655a9c03f09e2733d1b802e7035d4f7fa7",
+      "sha256": "db25f17c2eccb8b2f7cada875bb1b60fcd2f23d262a417741ed1e92720e5a45b",
+      "byte_length": 1197,
+      "content_base64": "W2V0X3BiX3NlY3Rpb24gZmJfYnVpbHQ9IjEiIGZ1bGx3aWR0aD0ib24iIF9idWlsZGVyX3ZlcnNpb249IjQuMC43IiBiYWNrZ3JvdW5kX2NvbG9yPSIjZmZmZmZmIiB3aWR0aD0iMTAwJSIgbWluX2hlaWdodD0iNjBweCIgaGVpZ2h0PSI4MHB4IiBtYXhfaGVpZ2h0PSI4MHB4IiBjdXN0b21fbWFyZ2luPSJ8fHx8ZmFsc2V8ZmFsc2UiIGN1c3RvbV9wYWRkaW5nPSJ8fHx8ZmFsc2V8ZmFsc2UiIHpfaW5kZXg9IjEwMCIgY3VzdG9tX2Nzc19tYWluX2VsZW1lbnQ9ImRpc3BsYXk6IGZsZXg7fHxhbGlnbi1pdGVtczogY2VudGVyOyIgYm9yZGVyX2NvbG9yX2JvdHRvbT0iI2Q2ZDZkNiIgZ2xvYmFsX21vZHVsZT0iOTUiIHNhdmVkX3RhYnM9ImFsbCIgY3VzdG9tX2Nzc19tYWluX2VsZW1lbnRfbGFzdF9lZGl0ZWQ9Im9ufHRhYmxldCJdW2V0X3BiX2Z1bGx3aWR0aF9tZW51IGZ1bGx3aWR0aF9tZW51PSJvbiIgbG9nbz0iaHR0cHM6Ly9mcmExLmRpZ2l0YWxvY2VhbnNwYWNlcy5jb20vd29yZHByZXNzLXNwZWVkeW5ldHovMjAxOS8xMi9sb2dvLWV4YW1wbGUuc3ZnIiBsb2dvX3VybD0iQEVULURDQGV5SmtlVzVoYldsaklqcDBjblZsTENKamIyNTBaVzUwSWpvaWFHOXRaVjkxY213aUxDSnpaWFIwYVc1bmN5STZlMzE5QCIgbG9nb19tYXhfaGVpZ2h0PSI2MHB4IiBzaG93X3NlYXJjaF9pY29uPSJvbiIgY2FydF9pY29uX2NvbG9yPSIjMDAwMDAwIiBzZWFyY2hfaWNvbl9jb2xvcj0iIzAwMDAwMCIgbWVudV9pY29uX2NvbG9yPSIjMDAwMDAwIiBfYnVpbGRlcl92ZXJzaW9uPSI0LjAuNyIgX2R5bmFtaWNfYXR0cmlidXRlcz0ibG9nb191cmwiIG1lbnVfZm9udD0ifHx8b258fHx8fCIgbWVudV90ZXh0X2NvbG9yPSIjMDAwMDAwIiB0ZXh0X29yaWVudGF0aW9uPSJyaWdodCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iNjBweCIgbWF4X2hlaWdodD0iNjBweCIgY3VzdG9tX21hcmdpbj0ifHx8fGZhbHNlfGZhbHNlIiBjdXN0b21fcGFkZGluZz0ifHx8fGZhbHNlfGZhbHNlIiBob3Zlcl9lbmFibGVkPSIwIiBjdXN0b21fY3NzX21haW5fZWxlbWVudD0iZGlzcGxheTogZmxleDt8fGFsaWduLWl0ZW1zOiBjZW50ZXI7fHwiIG1lbnVfdGV4dF9jb2xvcl9faG92ZXJfZW5hYmxlZD0ib258ZGVza3RvcCIgbWVudV90ZXh0X2NvbG9yX19ob3Zlcj0iI2UwMmIyMCJdWy9ldF9wYl9mdWxsd2lkdGhfbWVudV1bL2V0X3BiX3NlY3Rpb25d"
+    },
+    {
+      "post_id": 229,
+      "post_title": "tb-global-header-variable-width",
+      "post_name": "tb-global-header-variable-width",
+      "post_type": "et_pb_layout",
+      "post_status": "publish",
+      "source_file": "tb-global-header-variable-width.json",
+      "source_url": "https://gist.githubusercontent.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6/raw/caa52dcf60e97116a89a08ca9e2ee7bad2f82800/tb-global-header-variable-width.json",
+      "source_file_sha256": "b82ad87641b2c9cdb991697e0b85d257dfe693d07d16ea03a3765986a2206def",
+      "sha256": "3f96feccff7f85272a9b24d982b2a1afe12489fc627ad2d24f65adf384a3989c",
+      "byte_length": 1028,
+      "content_base64": "W2V0X3BiX3NlY3Rpb24gZmJfYnVpbHQ9IjEiIF9idWlsZGVyX3ZlcnNpb249IjQuMC43IiBoZWlnaHQ9IjgwcHgiIG1heF9oZWlnaHQ9IjgwcHgiIGN1c3RvbV9tYXJnaW49Inx8fHxmYWxzZXxmYWxzZSIgY3VzdG9tX3BhZGRpbmc9IjBweHx8MHB4fHxmYWxzZXxmYWxzZSIgY3VzdG9tX2Nzc19tYWluX2VsZW1lbnQ9ImRpc3BsYXk6IGZsZXg7fHxhbGlnbi1pdGVtczogY2VudGVyOyIgYm9yZGVyX3dpZHRoX3RvcD0iMXB4IiBib3JkZXJfY29sb3JfdG9wPSIjZDZkNmQ2Il1bZXRfcGJfcm93IF9idWlsZGVyX3ZlcnNpb249IjQuMC43IiBjdXN0b21fcGFkZGluZz0iMHB4fHwwcHh8fGZhbHNlfGZhbHNlIl1bZXRfcGJfY29sdW1uIHR5cGU9IjRfNCIgX2J1aWxkZXJfdmVyc2lvbj0iNC4wLjciXVtldF9wYl9tZW51IGFjdGl2ZV9saW5rX2NvbG9yPSIjZTAyYjIwIiBsb2dvPSJodHRwczovL2ZyYTEuZGlnaXRhbG9jZWFuc3BhY2VzLmNvbS93b3JkcHJlc3Mtc3BlZWR5bmV0ei8yMDE5LzEyL2xvZ28tZXhhbXBsZS5zdmciIGxvZ29fdXJsPSJARVQtRENAZXlKa2VXNWhiV2xqSWpwMGNuVmxMQ0pqYjI1MFpXNTBJam9pYUc5dFpWOTFjbXdpTENKelpYUjBhVzVuY3lJNmUzMTlAIiBsb2dvX21heF9oZWlnaHQ9IjYwcHgiIHNob3dfc2VhcmNoX2ljb249Im9uIiBjYXJ0X2ljb25fY29sb3I9IiMwMDAwMDAiIHNlYXJjaF9pY29uX2NvbG9yPSIjMDAwMDAwIiBtZW51X2ljb25fY29sb3I9IiMwMDAwMDAiIF9idWlsZGVyX3ZlcnNpb249IjQuMC43IiBfZHluYW1pY19hdHRyaWJ1dGVzPSJsb2dvX3VybCIgbWVudV9mb250PSJ8fHxvbnx8fHx8IiBtZW51X3RleHRfY29sb3I9IiMwMDAwMDAiIHRleHRfb3JpZW50YXRpb249InJpZ2h0IiBjdXN0b21fbWFyZ2luPSJ8fHx8ZmFsc2V8ZmFsc2UiIGN1c3RvbV9wYWRkaW5nPSJ8fHx8ZmFsc2V8ZmFsc2UiIGhvdmVyX2VuYWJsZWQ9IjAiIGJvcmRlcl93aWR0aF90b3A9IjBweCJdWy9ldF9wYl9tZW51XVsvZXRfcGJfY29sdW1uXVsvZXRfcGJfcm93XVsvZXRfcGJfc2VjdGlvbl0="
+    }
+  ]
+}

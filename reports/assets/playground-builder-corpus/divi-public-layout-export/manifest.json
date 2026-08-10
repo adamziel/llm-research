@@ -1,0 +1,20 @@
+{
+  "builder": "Divi",
+  "artifact_kind": "public layout export",
+  "raw_post_content_record": "post-content.json",
+  "source_repository": "https://gist.github.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6",
+  "source_commit": "caa52dcf60e97116a89a08ca9e2ee7bad2f82800",
+  "source_files": [
+    {
+      "name": "tb-global-header-full-width.json",
+      "url": "https://gist.githubusercontent.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6/raw/caa52dcf60e97116a89a08ca9e2ee7bad2f82800/tb-global-header-full-width.json",
+      "sha256": "f6eeb938e1bc821197bff34820b1a3655a9c03f09e2733d1b802e7035d4f7fa7"
+    },
+    {
+      "name": "tb-global-header-variable-width.json",
+      "url": "https://gist.githubusercontent.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6/raw/caa52dcf60e97116a89a08ca9e2ee7bad2f82800/tb-global-header-variable-width.json",
+      "sha256": "b82ad87641b2c9cdb991697e0b85d257dfe693d07d16ea03a3765986a2206def"
+    }
+  ],
+  "rendering_status": "Not rendered here: this artifact is source markup only and is not a self-contained WordPress site ZIP."
+}

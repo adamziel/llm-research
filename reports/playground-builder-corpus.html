@@ -9,7 +9,7 @@
 </style>
 </head>
 <body><main class="wrap">
-<header><p class="pill">Work in progress</p><h1>WordPress Playground builder markup corpus</h1><p>Database-captured builder page content and site exports. Every displayed raw record is loaded from its saved JSON artifact.</p></header>
+<header><p class="pill">Work in progress</p><h1>WordPress Playground builder markup corpus</h1><p>Database-captured builder page content, site exports, and clearly labeled public builder-export records. Every displayed raw record is loaded from its saved JSON artifact.</p></header>
 <p class="notice"><strong>Current run:</strong> the Kadence entry below was rechecked in the browser with the Kadence theme, WooCommerce product output, a Forminator form, an OpenStreetMap frame, and an Events Manager calendar. Its original public ZIP is withheld from this listing until the corrected export can replace it. The other entries remain provisional. <a href="assets/playground-builder-corpus/blockers.md">DevTools failure log and reproduction steps</a>.</p>
 <div class="grid" id="sites"></div>
 <script>
@@ -18,15 +18,18 @@ const sites=[
  {slug:'siteorigin',name:'Page Builder by SiteOrigin',version:'2.36.0',shot:'field-guide.png',zip:'site.zip'},
  {slug:'kadence-repaired',name:'Kadence Blocks',version:'3.7.9',shot:'shop.png',verified:true},
  {slug:'spectra',name:'Spectra Legacy – Gutenberg Blocks',version:'2.20.1',shot:'field-guide.png',zip:'site.zip'},
- {slug:'beaver-builder-docker',name:'Beaver Builder Lite (Docker)',version:'2.10.2.2',shot:'fieldGuide.png',docker:true}
+ {slug:'beaver-builder-docker',name:'Beaver Builder Lite (Docker)',version:'2.10.2.2',shot:'fieldGuide.png',docker:true},
+ {slug:'divi-public-layout-export',name:'Divi 4 public layout export',version:'4.0.7',external:true,source:'https://gist.github.com/mirkoschubert/05f938d6a5edc0001b7aa855d6d38ef6'}
 ];
 const base='assets/playground-builder-corpus/';
 const decode=s=>new TextDecoder().decode(Uint8Array.from(atob(s),c=>c.charCodeAt(0)));
 for(const site of sites){
  const card=document.createElement('article');card.className='card';
  const archive=base+site.slug+'/'+site.zip;
- const links=site.docker ? `<a href="${base+site.slug+'/manifest.json'}">Manifest</a><br><span class="meta">Screenshots and database page records are published. The local Docker archive is withheld because it includes deployment secrets.</span>` : site.verified ? `<span class="meta">Browser-checked corrected screenshot and database capture. Corrected site ZIP export is pending.</span>` : `<a href="${archive}">Download site ZIP</a> · <a href="https://playground.wordpress.net/?import-site=https://adamziel.github.io/llm-research/reports/${archive}">Open in Playground</a>`;
- card.innerHTML=`<img src="${base+site.slug+'/'+site.shot}" alt="${site.name} Shop screenshot"><section><span class="pill">${site.name} ${site.version}</span><h2>${site.name}</h2><p>${links}</p><p class="meta">Raw page content is loaded from the database record, with SHA-256 and byte-exact base64.</p><div class="records">Loading database record…</div></section>`;
+ const links=site.external ? `<a href="${site.source}">Original public export</a> · <a href="${base+site.slug+'/manifest.json'}">Source manifest</a><br><span class="meta">This is a public Divi layout export, not a self-contained site or live database capture.</span>` : site.docker ? `<a href="${base+site.slug+'/manifest.json'}">Manifest</a><br><span class="meta">Screenshots and database page records are published. The local Docker archive is withheld because it includes deployment secrets.</span>` : site.verified ? `<span class="meta">Browser-checked corrected screenshot and database capture. Corrected site ZIP export is pending.</span>` : `<a href="${archive}">Download site ZIP</a> · <a href="https://playground.wordpress.net/?import-site=https://adamziel.github.io/llm-research/reports/${archive}">Open in Playground</a>`;
+ const image=site.shot ? `<img src="${base+site.slug+'/'+site.shot}" alt="${site.name} Shop screenshot">` : '';
+ const recordLabel=site.external ? 'Raw post_content is read from the public export record, with SHA-256 and byte-exact base64.' : 'Raw page content is loaded from the database record, with SHA-256 and byte-exact base64.';
+ card.innerHTML=`${image}<section><span class="pill">${site.name} ${site.version}</span><h2>${site.name}</h2><p>${links}</p><p class="meta">${recordLabel}</p><div class="records">Loading saved record…</div></section>`;
  document.querySelector('#sites').append(card);
  fetch(base+site.slug+'/post-content.json').then(r=>r.json()).then(record=>{
   const box=card.querySelector('.records');box.replaceChildren();
